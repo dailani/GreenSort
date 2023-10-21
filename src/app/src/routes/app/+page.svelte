@@ -7,6 +7,7 @@
 	import { getImages } from '$lib/backend/ai-controller';
 	import { getMaterial } from '$lib/backend/ai-controller';
 	import Summary from '../summary/Summary.svelte';
+	import GalleryIcon from "$lib/static/gallery.svg"
 
 	enum AppState {
 		Capturing,
@@ -78,15 +79,29 @@
 			quality: 90
 		})
 
-		if (image.value == null || image.value.length == 0) {
+		await processImage(image.value);
+	}
+
+	async function enterGalleryImage() {
+		const image = await Camera.getPhoto({
+			resultType: CameraResultType.Base64,
+			allowEditing: true,
+			source: CameraSource.Photos
+		});
+
+		await processImage(image.base64String);
+	}
+
+	async function processImage(imageBase64: string | undefined | null) {
+		if (imageBase64 == null || imageBase64.length == 0) {
 			return;
 		}
 
-		userImage = image.value;
+		userImage = imageBase64;
 		updateCurrentState(AppState.Cropping);
 
 		try {
-			objectImages = await getImages({ image: image.value! });
+			objectImages = await getImages({ image: imageBase64 });
 		} catch (error) {
 			errorMessage = String(error);
 			updateCurrentState(AppState.Error);
@@ -114,8 +129,8 @@
 	{#if currentState == AppState.Capturing}
 		<div class="w-full h-full -z-10" id="cameraPreview" />
 		<div class="w-full absolute left-0 bottom-4 flex justify-center">
-
 			<button on:click={captureImage} class="w-16 h-16 bg-gray-400 rounded-full"></button>
+			<button on:click={enterGalleryImage} class="w-16 h-16 absolute right-4"><img src="{GalleryIcon}" alt="Pick from Gallery"></button>
 		</div>
 	{:else if currentState == AppState.Cropping}
 		<ImageBackgroundLoader

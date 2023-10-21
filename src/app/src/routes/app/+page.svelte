@@ -6,7 +6,8 @@
 	import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 	import { onDestroy, onMount } from 'svelte';
 	import ImageBackgroundLoader from './ImageBackgroundLoader.svelte';
-	import getImages from '$lib/backend/ai-controller';
+	import {getImages} from '$lib/backend/ai-controller';
+	import {getMaterial} from '$lib/backend/ai-controller';
 
 	enum AppState {
 		Capturing,
@@ -97,6 +98,7 @@
 		updateCurrentState(AppState.ObjectClassification);
 
 		//ToDo: Run Classification
+		await getMaterial({images: [objectImage]});
 		await new Promise((resolve) => setTimeout(resolve, 5000));
 
 		updateCurrentState(AppState.ObjectDetails);

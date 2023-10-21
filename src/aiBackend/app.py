@@ -7,6 +7,7 @@ import concurrent.futures
 app = Flask(__name__)
 CORS(app)
 
+
 @app.route('/')
 def hello_world():  # put application's code here
     return 'Hello World!'
@@ -27,16 +28,17 @@ def material() -> Response:
     for item in images:
         print(item)
 
-    results = {}
+    results = [None] * len(images)
     with concurrent.futures.ThreadPoolExecutor() as executor:
         futures = {executor.submit(analyze_image, item): item for item in images}
 
-        for i ,future in enumerate(concurrent.futures.as_completed(futures)):
+        i: int
+        for i, future in enumerate(concurrent.futures.as_completed(futures)):
             result: dict[str, list[str]] = future.result()
-            results[str(i)] = result
+            results[i] = result
 
     return jsonify(results)
 
 
 if __name__ == "__main__":
-  app.run(host='0.0.0.0', port=8000, debug=True)
+    app.run(host='0.0.0.0', port=8000, debug=True)

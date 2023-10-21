@@ -3,7 +3,7 @@ interface SourceImage {
 }
 
 async function getImages(content: SourceImage): Promise<any> {
-	const response = await fetch('this is endpoint url', {
+	const response = await fetch('https://greensort-backend-okzie2k6iq-uc.a.run.app/getItems', {
 		method: 'POST',
 		body: JSON.stringify({ image: content.image }),
 		headers: { 'Content-Type': 'application/json; charset=UTF-8' }

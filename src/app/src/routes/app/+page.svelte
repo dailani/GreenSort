@@ -83,11 +83,7 @@
 			updateCurrentState(AppState.Error);
 		}
 
-		//ToDo: Call backend for cropping
-		await getImages({image: image.base64String!});
-	
-
-		await new Promise((resolve) => setTimeout(resolve, 5000));
+		objectImages = await getImages({ image: image.base64String! });
 
 		updateCurrentState(AppState.ObjectSelection);
 	}

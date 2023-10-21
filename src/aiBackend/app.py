@@ -4,9 +4,10 @@ from flask_cors import CORS
 from util import crop_seperate_objects, analyze_image
 import concurrent.futures
 
+from util2 import getuser
+
 app = Flask(__name__)
 CORS(app)
-
 
 @app.route('/')
 def hello_world():  # put application's code here
@@ -38,6 +39,13 @@ def material() -> Response:
             results[i] = result
 
     return jsonify(results)
+
+@app.route('/user/<name>/password/<pw>', methods=['GET'])
+def add(name,pw) -> Response:
+    print(name)
+    print(pw)
+    r = getuser(name,pw)
+    return jsonify(r)
 
 
 if __name__ == "__main__":

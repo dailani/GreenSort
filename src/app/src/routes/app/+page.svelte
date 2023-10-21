@@ -110,7 +110,7 @@
 		<div class="grid grid-cols-2">
 			{#each objectImages ?? [] as objectImage}
 				<button class="w-full max-h-28" on:click={() => selectObject(objectImage)}>
-					<img src={objectImage} class="w-full h-full" alt="" />
+					<img src="data:image/png;base64,{objectImage}" class="w-full h-full" alt="" />
 				</button>
 			{/each}
 		</div>

@@ -61,3 +61,30 @@ def getuser(user: str, password: str):
             cursor.close()
             connection.close()
             print("PostgreSQL connection is closed")
+
+def getadress(category: str):
+    # Database connection settings
+
+    # Initialize the connection outside the try block
+    connection = None
+
+    try:
+        # Connect to the database
+        connection = psycopg2.connect(**db_settings)
+
+        # Create a cursor
+        cursor = connection.cursor()
+        cursor.execute('SELECT * FROM "adress" WHERE category = %s;', (category))
+        result = cursor.fetchone()
+        print(result)
+        cursor.close()
+        connection.close()
+        return result
+
+    except (Exception, psycopg2.Error) as error:
+        print("Error connecting to PostgreSQL:", error)
+    finally:
+        if connection:
+            cursor.close()
+            connection.close()
+            print("PostgreSQL connection is closed")

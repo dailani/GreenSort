@@ -18,6 +18,8 @@
 
 	let currentState: AppState = AppState.Capturing;
 
+	let cameraRunning: boolean = false;
+
 	let userImage: string | null = null;
 
 	let objectImages: string[] | null = null;
@@ -33,10 +35,12 @@
 	function updateCurrentState(state: AppState) {
 		currentState = state;
 
-		if (state == AppState.Capturing) {
+		if (state == AppState.Capturing && !cameraRunning) {
 			startCameraPreview();
-		} else {
+			cameraRunning = true;
+		} else if (cameraRunning) {
 			stopCameraPreview();
+			cameraRunning = false;
 		}
 
 		if (state <= AppState.ObjectSelection) {

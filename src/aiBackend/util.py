@@ -1,4 +1,5 @@
 import io
+from typing import Dict, List
 
 from google.cloud import vision
 from PIL import Image

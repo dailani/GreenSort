@@ -74,22 +74,19 @@
 	}
 
 	async function captureImage() {
-		const image = await Camera.getPhoto({
-			source: CameraSource.Camera,
-			quality: 90,
-			resultType: CameraResultType.Base64,
-			saveToGallery: false
-		});
+		const image = await CameraPreview.capture({
+			quality: 90
+		})
 
-		if (image.base64String == undefined) {
+		if (image.value == null || image.value.length == 0) {
 			return;
 		}
 
-		userImage = image.base64String;
+		userImage = image.value;
 		updateCurrentState(AppState.Cropping);
 
 		try {
-			objectImages = await getImages({ image: image.base64String! });
+			objectImages = await getImages({ image: image.value! });
 		} catch (error) {
 			errorMessage = String(error);
 			updateCurrentState(AppState.Error);

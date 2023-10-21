@@ -6,6 +6,7 @@
 	import ImageBackgroundLoader from './ImageBackgroundLoader.svelte';
 	import { getImages } from '$lib/backend/ai-controller';
 	import { getMaterial } from '$lib/backend/ai-controller';
+	import { App } from '@capacitor/app';
 	import Summary from '../summary/Summary.svelte';
 	import GalleryIcon from "$lib/static/gallery.svg"
 
@@ -31,15 +32,30 @@
 	let errorMessage: string | null = null;
 
 	onMount(() => {
-		setTimeout(startCameraPreview, 500);
+		console.log("App Mounted!");
+
+		setTimeout(startCameraPreview, 50);
+
+		App.addListener("backButton", e => {
+			if (currentState == AppState.Capturing) {
+				App.exitApp();	
+				return;
+			} 
+
+			if (currentState == AppState.ObjectSelection || currentState == AppState.Error) {
+				updateCurrentState(AppState.Capturing);
+			} else if (currentState == AppState.ObjectDetails) {
+				updateCurrentState(AppState.ObjectSelection);
+			}
+		})
 	});
 
 	function updateCurrentState(state: AppState) {
 		currentState = state;
 
-		if (state == AppState.Capturing && !cameraRunning) {
+		if (state == AppState.Capturing) {
 			startCameraPreview();
-		} else if (cameraRunning) {
+		} else {
 			stopCameraPreview();
 		}
 
@@ -53,24 +69,30 @@
 			return;
 		}
 
-		cameraRunning = true;
-		CameraPreview.start({
-			parent: 'cameraPreview',
-			position: 'rear',
-			disableAudio: true,
-			enableZoom: true,
-			toBack: true,
-			lockAndroidOrientation: true,	
-			rotateWhenOrientationChanged: false
-		});
+		try {
+			CameraPreview.start({
+				parent: 'cameraPreview',
+				position: 'rear',
+				disableAudio: true,
+				enableZoom: true,
+				toBack: true,
+				lockAndroidOrientation: true,	
+				rotateWhenOrientationChanged: false
+			});
+			cameraRunning = true;
+		} catch (error) {
+			console.log("Starting Camera Preview Failed. Retrying later...")
+			setTimeout(startCameraPreview, 250);
+			cameraRunning = false;
+		}
 	}
 
 	function stopCameraPreview() {
-		if (!browser) {
+		if (!browser || !cameraRunning) {
 			return;
 		}
 
-		//CameraPreview.stop();
+		CameraPreview.stop();
 		cameraRunning = false;
 	}
 

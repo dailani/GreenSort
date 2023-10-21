@@ -1,45 +1,57 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
-	import { debounceSync } from '$lib/utils';
 	import { CameraPreview } from '@capacitor-community/camera-preview';
 	import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-	import { onDestroy, onMount } from 'svelte';
+	import { onMount } from 'svelte';
+	import ImageBackgroundLoader from './ImageBackgroundLoader.svelte';
+	import { getImages } from '$lib/backend/ai-controller';
+	import { getMaterial } from '$lib/backend/ai-controller';
 
 	enum AppState {
 		Capturing,
 		Cropping,
 		ObjectSelection,
+		ObjectClassification,
+		ObjectDetails,
 		Error
 	}
 
 	let currentState: AppState = AppState.Capturing;
 
-	let userImageSrc: string | null;
+	let cameraRunning: boolean = false;
 
-	let objectImages: string[] | null;
+	let userImage: string | null = null;
 
-	let errorMessage: string | null;
+	let objectImages: string[] | null = null;
+	let currentObjectImage: string | null = null;
+	let currentObjectDetails: any | null = null;
+
+	let errorMessage: string | null = null;
 
 	onMount(() => {
-		startCameraPreview();
+		setTimeout(startCameraPreview, 500);
 	});
 
 	function updateCurrentState(state: AppState) {
 		currentState = state;
 
-		if (state == AppState.Capturing) {
+		if (state == AppState.Capturing && !cameraRunning) {
 			startCameraPreview();
-		} else {
+		} else if (cameraRunning) {
 			stopCameraPreview();
+		}
+
+		if (state <= AppState.ObjectSelection) {
+			currentObjectImage = null;
 		}
 	}
 
 	function startCameraPreview() {
-		if (!browser) {
+		if (!browser || cameraRunning) {
 			return;
 		}
 
+		cameraRunning = true;
 		CameraPreview.start({
 			parent: 'cameraPreview',
 			position: 'rear',
@@ -51,60 +63,77 @@
 		if (!browser) {
 			return;
 		}
+
 		CameraPreview.stop();
+		cameraRunning = false;
 	}
 
 	async function captureImage() {
 		const image = await Camera.getPhoto({
 			source: CameraSource.Camera,
 			quality: 90,
-			resultType: CameraResultType.Uri,
+			resultType: CameraResultType.Base64,
 			saveToGallery: false
 		});
 
-		if (image.webPath == undefined) {
+		if (image.base64String == undefined) {
 			return;
 		}
 
-		userImageSrc = image.webPath;
+		userImage = image.base64String;
 		updateCurrentState(AppState.Cropping);
 
 		try {
+			objectImages = await getImages({ image: image.base64String! });
 		} catch (error) {
 			errorMessage = String(error);
 			updateCurrentState(AppState.Error);
 		}
 
-		//ToDo: Call backend for cropping
-
-		await new Promise((resolve) => setTimeout(resolve, 30000));
-
 		updateCurrentState(AppState.ObjectSelection);
+	}
+
+	async function selectObject(objectImage: string) {
+		currentObjectImage = objectImage;
+		updateCurrentState(AppState.ObjectClassification);
+
+		try {
+			const materials = await getMaterial({ image: objectImage });
+		} catch (error) {
+			errorMessage = String(error);
+			updateCurrentState(AppState.Error);
+		}
+
+		updateCurrentState(AppState.ObjectDetails);
 	}
 </script>
 
-<div class="h-full w-full">
+<div class="h-full w-full px-3 py-2">
 	{#if currentState == AppState.Capturing}
 		<div id="cameraPreview" />
 		<button on:click={captureImage} class="absolute bottom-2 left-1/2 right-1/2">O</button>
 	{:else if currentState == AppState.Cropping}
-		<div class="w-full h-full flex justify-center items-center">
-			<img src={userImageSrc} alt="" class="opacity-60 blur-sm" />
-			<div class="absolute w-full h-full flex justify-center items-center z-30 top-0">
-				<div class="h-20 w-20">
-					<LoadingSpinner />
-				</div>
-			</div>
-		</div>
+		<ImageBackgroundLoader
+			title="Detecting Objects..."
+			src="data:image/png;base64,{userImage ?? ''}"
+		/>
 	{:else if currentState == AppState.ObjectSelection}
-		<h2>Select an object</h2>
-		<div class="grid grid-cols-2">
+		<h2 class="font-bold text-xl text-center">Select an object</h2>
+		<hr class="my-2" />
+		<div class="grid overflow-auto grid-cols-2 gap-4 p-4 bg-zinc-700 rounded-lg">
 			{#each objectImages ?? [] as objectImage}
-				<button class="w-full max-h-28">
-					<img src={objectImage} class="w-full h-full" alt="" />
+				<button class="w-full max-h-96" on:click={() => selectObject(objectImage)}>
+					<img src="data:image/png;base64,{objectImage}" class="rounded-lg w-full h-full" alt="" />
 				</button>
 			{/each}
 		</div>
+	{:else if currentState == AppState.ObjectClassification}
+		<ImageBackgroundLoader
+			title="Finding Recycling Details..."
+			src="data:image/png;base64,{currentObjectImage ?? ''}"
+		/>
+	{:else if currentState == AppState.ObjectDetails}
+		<p>Object Details here</p>
 	{:else if currentState == AppState.Error}
 		<h2 class="font-bold text-lg text-red-700">An error occured</h2>
 		<p>{errorMessage}</p>

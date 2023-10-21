@@ -1,14 +1,11 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
-	import { debounceSync } from '$lib/utils';
 	import { CameraPreview } from '@capacitor-community/camera-preview';
 	import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-	import { onDestroy, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import ImageBackgroundLoader from './ImageBackgroundLoader.svelte';
 	import { getImages } from '$lib/backend/ai-controller';
 	import { getMaterial } from '$lib/backend/ai-controller';
-	import TEST_DATA from './kek.json';
 
 	enum AppState {
 		Capturing,
@@ -19,15 +16,15 @@
 		Error
 	}
 
-	let currentState: AppState = AppState.ObjectSelection;
+	let currentState: AppState = AppState.Capturing;
 
-	let userImage: string | null;
+	let userImage: string | null = null;
 
-	let objectImages: string[] | null = TEST_DATA;
-	let currentObjectImage: string | null;
-	let currentObjectDetails: any | null;
+	let objectImages: string[] | null = null;
+	let currentObjectImage: string | null = null;
+	let currentObjectDetails: any | null = null;
 
-	let errorMessage: string | null;
+	let errorMessage: string | null = null;
 
 	onMount(() => {
 		startCameraPreview();

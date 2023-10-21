@@ -8,7 +8,12 @@
 	import { getMaterial } from '$lib/backend/ai-controller';
 	import Summary from '../summary/Summary.svelte';
 
-	enum AppState {
+
+	interface ImageMaterials {
+	materials: string[];
+	things: string[];
+}
+	 enum AppState {
 		Capturing,
 		Cropping,
 		ObjectSelection,
@@ -18,6 +23,12 @@
 	}
 
 	let currentState: AppState = AppState.Capturing;
+
+	const handleStateChange = () => {
+    currentState = AppState.ObjectSelection;
+  }
+
+  	let globalMaterials: ImageMaterials;
 
 	let cameraRunning: boolean = false;
 
@@ -101,6 +112,7 @@
 
 		try {
 			const materials = await getMaterial({ image: objectImage });
+			globalMaterials = materials  ;
 		} catch (error) {
 			errorMessage = String(error);
 			updateCurrentState(AppState.Error);
@@ -138,7 +150,7 @@
 			src="data:image/png;base64,{currentObjectImage ?? ''}"
 		/>
 	{:else if currentState == AppState.ObjectDetails}
-		<Summary src="data:image/png;base64,{currentObjectImage ?? ''}"/>
+		<Summary materials={globalMaterials} onBack={handleStateChange} src="data:image/png;base64,{currentObjectImage ?? ''}"/>
 	{:else if currentState == AppState.Error}
 		<h2 class="font-bold text-lg text-red-700">An error occured</h2>
 		<p>{errorMessage}</p>

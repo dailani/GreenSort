@@ -2,12 +2,20 @@
 <script lang="ts">
     	
 	export let src: string;
+    export let onBack: () => void;
+    export let materials: ImageMaterials;
+
+    
+	interface ImageMaterials {
+	materials: string[];
+	things: string[];
+}
 </script>
 
 <div class=" flex flex-col bg-[#7A3E3E] px-4 py-2 rounded-b-[48px] gap-3 items-center ">
 
     <p class="text-center text-sm text-neutral-300">This is the summary of the the specific item</p>
-    <button class="text-white font-bold border-solid border-2 border-white rounded-2xl w-fit px-2 py-1 " >Back</button>
+    <button on:click={onBack} class="text-white font-bold border-solid border-2 border-white rounded-2xl w-fit px-2 py-1 " >Back</button>
 
 </div>
 
@@ -16,15 +24,16 @@
         <div class=" object-cover">
             <img {src} alt="" class="w-full max-h-52 object-cover" />
         </div>
-          <div class="flex flex-row py-1 gap-24 bg-[#47A992] shadow-sm rounded-b-md">
-            <div class="flex flex-col p-2 gap-2">
-                <div class="text-xl items-center text-white font-bold"> Material:</div>
-                <div class="text-xl text-white font-bold">Carbon Credit:</div>
+          <div class="flex flex-col py-1 px-2  bg-[#47A992] shadow-sm rounded-b-md">
+            <div class="flex flex-col p-2 items-center">
+                <div class="text-md items-center text-white "> This item consists of</div>
+                <div class=" text-2xl text-white font-bold flex flex-wrap text-clip">{materials == null ? 'Not Found' : materials.material}</div>
+
             </div>
-            <div class="flex flex-col items-center gap-2 py-[7px] text-white">
-                <div class="text-xl text-white font-bold">Plastic</div>
-                <div>
-                    <div class="text-xl font-mono font-bold">0.5</div>
+            <div class=" flex flex-col items-center gap-2 py-[7px] text-white">
+                <div>      
+                <div class="text-md items-center text-white ">Carbon Credit</div>
+                    <div class="text-2xl font-mono font-bold text-center">0.5</div>
                 </div>
               
             </div>
@@ -34,7 +43,7 @@
         <div>
             <div class="flex flex-row justify-between p-2">
                 <div class="text-xl font-bold">Recycling Details</div>
-                <div class="text-xl font-bold">Plastic</div>
+                <div class="text-xl font-bold"></div>
             </div>
             <div class="flex flex-col gap-y-2 p-2">
                 <div class="flex flex-row justify-between">

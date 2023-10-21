@@ -6,8 +6,9 @@
 	import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 	import { onDestroy, onMount } from 'svelte';
 	import ImageBackgroundLoader from './ImageBackgroundLoader.svelte';
-	import {getImages} from '$lib/backend/ai-controller';
-	import {getMaterial} from '$lib/backend/ai-controller';
+	import { getImages } from '$lib/backend/ai-controller';
+	import { getMaterial } from '$lib/backend/ai-controller';
+	import TEST_DATA from './kek.json';
 
 	enum AppState {
 		Capturing,
@@ -18,11 +19,11 @@
 		Error
 	}
 
-	let currentState: AppState = AppState.Capturing;
+	let currentState: AppState = AppState.ObjectSelection;
 
-	let userImageSrc: string | null;
+	let userImage: string | null;
 
-	let objectImages: string[] | null;
+	let objectImages: string[] | null = TEST_DATA;
 	let currentObjectImage: string | null;
 	let currentObjectDetails: any | null;
 
@@ -69,13 +70,15 @@
 		const image = await Camera.getPhoto({
 			source: CameraSource.Camera,
 			quality: 90,
-			resultType: CameraResultType.Base64 || CameraResultType.Uri,
+			resultType: CameraResultType.Base64,
 			saveToGallery: false
 		});
 
-		console.log(image.base64String);
+		if (image.base64String == undefined) {
+			return;
+		}
 
-		//userImageSrc = image.webPath;
+		userImage = image.base64String;
 		updateCurrentState(AppState.Cropping);
 
 		try {
@@ -93,31 +96,36 @@
 		currentObjectImage = objectImage;
 		updateCurrentState(AppState.ObjectClassification);
 
-		//ToDo: Run Classification
-		await getMaterial({images: [objectImage]});
-		await new Promise((resolve) => setTimeout(resolve, 5000));
+		const materials = await getMaterial({ image: objectImage });
 
 		updateCurrentState(AppState.ObjectDetails);
 	}
 </script>
 
-<div class="h-full w-full">
+<div class="h-full w-full px-3 py-2">
 	{#if currentState == AppState.Capturing}
 		<div id="cameraPreview" />
 		<button on:click={captureImage} class="absolute bottom-2 left-1/2 right-1/2">O</button>
 	{:else if currentState == AppState.Cropping}
-		<ImageBackgroundLoader src={userImageSrc ?? ''} />
+		<ImageBackgroundLoader
+			title="Detecting Objects..."
+			src="data:image/png;base64,{userImage ?? ''}"
+		/>
 	{:else if currentState == AppState.ObjectSelection}
-		<h2 class="font-bold text-lg">Select an object</h2>
-		<div class="grid grid-cols-2">
+		<h2 class="font-bold text-xl text-center">Select an object</h2>
+		<hr class="my-2" />
+		<div class="grid overflow-auto grid-cols-2 gap-4 p-4 bg-zinc-700 rounded-lg">
 			{#each objectImages ?? [] as objectImage}
-				<button class="w-full max-h-28" on:click={() => selectObject(objectImage)}>
-					<img src="data:image/png;base64,{objectImage}" class="w-full h-full" alt="" />
+				<button class="w-full max-h-96" on:click={() => selectObject(objectImage)}>
+					<img src="data:image/png;base64,{objectImage}" class="rounded-lg w-full h-full" alt="" />
 				</button>
 			{/each}
 		</div>
 	{:else if currentState == AppState.ObjectClassification}
-		<ImageBackgroundLoader src={currentObjectImage ?? ''} />
+		<ImageBackgroundLoader
+			title="Finding Recycling Details..."
+			src="data:image/png;base64,{currentObjectImage ?? ''}"
+		/>
 	{:else if currentState == AppState.ObjectDetails}
 		<p>Object Details here</p>
 	{:else if currentState == AppState.Error}

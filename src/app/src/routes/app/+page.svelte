@@ -29,7 +29,7 @@
 	let errorMessage: string | null = null;
 
 	onMount(() => {
-		startCameraPreview();
+		setTimeout(startCameraPreview, 500);
 	});
 
 	function updateCurrentState(state: AppState) {
@@ -37,10 +37,8 @@
 
 		if (state == AppState.Capturing && !cameraRunning) {
 			startCameraPreview();
-			cameraRunning = true;
 		} else if (cameraRunning) {
 			stopCameraPreview();
-			cameraRunning = false;
 		}
 
 		if (state <= AppState.ObjectSelection) {
@@ -49,10 +47,11 @@
 	}
 
 	function startCameraPreview() {
-		if (!browser) {
+		if (!browser || cameraRunning) {
 			return;
 		}
 
+		cameraRunning = true;
 		CameraPreview.start({
 			parent: 'cameraPreview',
 			position: 'rear',
@@ -64,7 +63,9 @@
 		if (!browser) {
 			return;
 		}
+
 		CameraPreview.stop();
+		cameraRunning = false;
 	}
 
 	async function captureImage() {

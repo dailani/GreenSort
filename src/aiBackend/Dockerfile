@@ -9,4 +9,4 @@ COPY . .
 
 RUN pip3 install -r requirements.txt --break-system-packages
 
-ENTRYPOINT ["python3", "./app.py"]
+ENTRYPOINT ["gunicorn", "-w 4", "app:app"]

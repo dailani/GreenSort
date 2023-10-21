@@ -6,7 +6,9 @@
 	import ImageBackgroundLoader from './ImageBackgroundLoader.svelte';
 	import { getImages } from '$lib/backend/ai-controller';
 	import { getMaterial } from '$lib/backend/ai-controller';
+	import { App } from '@capacitor/app';
 	import Summary from '../summary/Summary.svelte';
+	import GalleryIcon from "$lib/static/gallery.svg"
 
 
 	interface ImageMaterials {
@@ -41,15 +43,30 @@
 	let errorMessage: string | null = null;
 
 	onMount(() => {
-		setTimeout(startCameraPreview, 500);
+		console.log("App Mounted!");
+
+		setTimeout(startCameraPreview, 50);
+
+		App.addListener("backButton", e => {
+			if (currentState == AppState.Capturing) {
+				App.exitApp();	
+				return;
+			} 
+
+			if (currentState == AppState.ObjectSelection || currentState == AppState.Error) {
+				updateCurrentState(AppState.Capturing);
+			} else if (currentState == AppState.ObjectDetails) {
+				updateCurrentState(AppState.ObjectSelection);
+			}
+		})
 	});
 
 	function updateCurrentState(state: AppState) {
 		currentState = state;
 
-		if (state == AppState.Capturing && !cameraRunning) {
+		if (state == AppState.Capturing) {
 			startCameraPreview();
-		} else if (cameraRunning) {
+		} else {
 			stopCameraPreview();
 		}
 
@@ -63,24 +80,30 @@
 			return;
 		}
 
-		cameraRunning = true;
-		CameraPreview.start({
-			parent: 'cameraPreview',
-			position: 'rear',
-			disableAudio: true,
-			enableZoom: true,
-			toBack: true,
-			lockAndroidOrientation: true,	
-			rotateWhenOrientationChanged: false
-		});
+		try {
+			CameraPreview.start({
+				parent: 'cameraPreview',
+				position: 'rear',
+				disableAudio: true,
+				enableZoom: true,
+				toBack: true,
+				lockAndroidOrientation: true,	
+				rotateWhenOrientationChanged: false
+			});
+			cameraRunning = true;
+		} catch (error) {
+			console.log("Starting Camera Preview Failed. Retrying later...")
+			setTimeout(startCameraPreview, 250);
+			cameraRunning = false;
+		}
 	}
 
 	function stopCameraPreview() {
-		if (!browser) {
+		if (!browser || !cameraRunning) {
 			return;
 		}
 
-		//CameraPreview.stop();
+		CameraPreview.stop();
 		cameraRunning = false;
 	}
 
@@ -89,15 +112,29 @@
 			quality: 90
 		})
 
-		if (image.value == null || image.value.length == 0) {
+		await processImage(image.value);
+	}
+
+	async function enterGalleryImage() {
+		const image = await Camera.getPhoto({
+			resultType: CameraResultType.Base64,
+			allowEditing: true,
+			source: CameraSource.Photos
+		});
+
+		await processImage(image.base64String);
+	}
+
+	async function processImage(imageBase64: string | undefined | null) {
+		if (imageBase64 == null || imageBase64.length == 0) {
 			return;
 		}
 
-		userImage = image.value;
+		userImage = imageBase64;
 		updateCurrentState(AppState.Cropping);
 
 		try {
-			objectImages = await getImages({ image: image.value! });
+			objectImages = await getImages({ image: imageBase64 });
 		} catch (error) {
 			errorMessage = String(error);
 			updateCurrentState(AppState.Error);
@@ -126,8 +163,8 @@
 	{#if currentState == AppState.Capturing}
 		<div class="w-full h-full -z-10" id="cameraPreview" />
 		<div class="w-full absolute left-0 bottom-4 flex justify-center">
-
 			<button on:click={captureImage} class="w-16 h-16 bg-gray-400 rounded-full"></button>
+			<button on:click={enterGalleryImage} class="w-16 h-16 absolute right-4"><img src="{GalleryIcon}" alt="Pick from Gallery"></button>
 		</div>
 	{:else if currentState == AppState.Cropping}
 		<ImageBackgroundLoader

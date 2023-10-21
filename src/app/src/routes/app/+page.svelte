@@ -6,6 +6,7 @@
 	import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 	import { onDestroy, onMount } from 'svelte';
 	import ImageBackgroundLoader from './ImageBackgroundLoader.svelte';
+	import getImages from '$lib/backend/ai-controller';
 
 	enum AppState {
 		Capturing,
@@ -87,6 +88,8 @@
 		}
 
 		//ToDo: Call backend for cropping
+		await getImages({image: image.base64String!});
+	
 
 		await new Promise((resolve) => setTimeout(resolve, 5000));
 

@@ -73,11 +73,7 @@
 
 		console.log(image.base64String);
 
-		if (image.webPath == undefined) {
-			return;
-		}
-
-		userImageSrc = image.webPath;
+		//userImageSrc = image.webPath;
 		updateCurrentState(AppState.Cropping);
 
 		try {

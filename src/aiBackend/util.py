@@ -36,8 +36,7 @@ def crop_seperate_objects(image_str: str) -> list[str]:
             cropped_base64 = base64.b64encode(buffer.getvalue()).decode("utf-8")
             cropped_images.append(cropped_base64)
             buffer.close()
-
-        return cropped_images
+    return cropped_images
 
 
 ##caus python

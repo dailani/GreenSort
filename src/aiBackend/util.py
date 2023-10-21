@@ -5,10 +5,9 @@ from PIL import Image
 import base64
 
 
-def crop_seperate_objects(imageStr: str) -> list[str]:
+def crop_seperate_objects(image_str: str) -> list[str]:
     # Open the original image
-    b: bytes = base64.decodebytes(bytes(imageStr, "utf8"))
-
+    b: bytes = base64.decodebytes(bytes(image_str, "utf8"))
     original = Image.open(io.BytesIO(b))
 
     client = vision.ImageAnnotatorClient()
@@ -39,3 +38,36 @@ def crop_seperate_objects(imageStr: str) -> list[str]:
             buffer.close()
 
         return cropped_images
+
+
+##caus python
+from vertexai.vision_models import ImageQnAModel, Image as vertexaiImage
+
+
+def analyze_image(image_str: str) -> dict[str, list[str]]:
+    model = ImageQnAModel.from_pretrained("imagetext@001")
+
+    b: bytes = base64.decodebytes(bytes(image_str, "utf8"))
+    image = vertexaiImage(b)
+
+    # object_type = threading.Thread(model.ask_question, args=('image', 'What object is in the image?', 3))
+    object_type = model.ask_question(
+        image=image,
+        question="What object is in the image? ",
+        # Optional:
+        number_of_results=3,
+    )
+
+    # object_material = threading.Thread(model.ask_question,args=('image', 'What materials is this object made up of?', 3))
+    object_material = model.ask_question(
+        image=image,
+        question="What materials is this object made up of?",
+        # Optional:
+        number_of_results=3,
+    )
+    response_data = {
+        'things': object_type,
+        'material': object_material
+    }
+
+    return response_data

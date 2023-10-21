@@ -6,8 +6,8 @@ interface CropedImages {
 	images: string[];
 }
 
-export async function getImages(content: SourceImage): Promise<any> {
-	const response = await fetch('https://greensort-backend-okzie2k6iq-uc.a.run.app/upload', {
+export async function getImages(content: SourceImage) {
+	const response = await fetch('https://greensort-backend-okzie2k6iq-uc.a.run.app/getItems', {
 		method: 'POST',
 		body: JSON.stringify({ image: content.image }),
 		headers: { 'Content-Type': 'application/json; charset=UTF-8' }
@@ -21,7 +21,7 @@ export async function getImages(content: SourceImage): Promise<any> {
 	return data;
 }
 
-export async function getMaterial(content: CropedImages): Promise<any> {
+export async function getMaterial(content: CropedImages) {
 	const response = await fetch('https://greensort-backend-okzie2k6iq-uc.a.run.app/getMaterial', {
 		method: 'POST',
 		body: JSON.stringify({ image: content.images }),

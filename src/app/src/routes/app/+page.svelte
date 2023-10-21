@@ -57,7 +57,7 @@
 			position: 'rear',
 			disableAudio: true,
 			enableZoom: true,
-			toBack: false,
+			toBack: true,
 			lockAndroidOrientation: true,	
 			rotateWhenOrientationChanged: false
 		});
@@ -115,9 +115,9 @@
 <div class="h-full w-full px-3 py-2">
 	{#if currentState == AppState.Capturing}
 		<div class="w-full h-full -z-10" id="cameraPreview" />
-		<div class="w-full absolute bottom-4 flex justify-center">
+		<div class="w-full absolute left-0 bottom-4 flex justify-center">
 
-			<button on:click={captureImage} class="w-16 h-16 bg-white rounded-full"></button>
+			<button on:click={captureImage} class="w-16 h-16 bg-gray-400 rounded-full"></button>
 		</div>
 	{:else if currentState == AppState.Cropping}
 		<ImageBackgroundLoader

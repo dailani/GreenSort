@@ -79,12 +79,11 @@
 		updateCurrentState(AppState.Cropping);
 
 		try {
+			objectImages = await getImages({ image: image.base64String! });
 		} catch (error) {
 			errorMessage = String(error);
 			updateCurrentState(AppState.Error);
 		}
-
-		objectImages = await getImages({ image: image.base64String! });
 
 		updateCurrentState(AppState.ObjectSelection);
 	}
@@ -93,7 +92,12 @@
 		currentObjectImage = objectImage;
 		updateCurrentState(AppState.ObjectClassification);
 
-		const materials = await getMaterial({ image: objectImage });
+		try {
+			const materials = await getMaterial({ image: objectImage });
+		} catch (error) {
+			errorMessage = String(error);
+			updateCurrentState(AppState.Error);
+		}
 
 		updateCurrentState(AppState.ObjectDetails);
 	}

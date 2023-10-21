@@ -1,10 +1,11 @@
 import json
 from flask import Flask, request, Response, jsonify
+from flask_cors import CORS
 from util import crop_seperate_objects, analyze_image
 import concurrent.futures
 
 app = Flask(__name__)
-
+CORS(app)
 
 @app.route('/')
 def hello_world():  # put application's code here

@@ -6,6 +6,7 @@
 	import ImageBackgroundLoader from './ImageBackgroundLoader.svelte';
 	import { getImages } from '$lib/backend/ai-controller';
 	import { getMaterial } from '$lib/backend/ai-controller';
+	import Summary from '../summary/Summary.svelte';
 
 	enum AppState {
 		Capturing,
@@ -108,9 +109,9 @@
 	}
 </script>
 
-<div class="h-full w-full px-3 py-2">
+<div class="h-full w-full  {currentState == AppState.ObjectDetails ? '' : 'py-2 px-3'}">
 	{#if currentState == AppState.Capturing}
-		<div id="cameraPreview" />
+		<div id="cameraPreview" class="h-full"/>
 		<button on:click={captureImage} class="absolute bottom-2 left-1/2 right-1/2">O</button>
 	{:else if currentState == AppState.Cropping}
 		<ImageBackgroundLoader
@@ -133,7 +134,7 @@
 			src="data:image/png;base64,{currentObjectImage ?? ''}"
 		/>
 	{:else if currentState == AppState.ObjectDetails}
-		<p>Object Details here</p>
+		<Summary src="data:image/png;base64,{currentObjectImage ?? ''}"/>
 	{:else if currentState == AppState.Error}
 		<h2 class="font-bold text-lg text-red-700">An error occured</h2>
 		<p>{errorMessage}</p>

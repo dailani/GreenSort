@@ -1,7 +1,7 @@
 import json
 from flask import Flask, request, Response, jsonify
 from flask_cors import CORS
-from util import crop_seperate_objects, analyze_image
+from util import crop_seperate_objects, analyze_image,getcategory
 import concurrent.futures
 
 from util2 import getuser, getadress
@@ -41,6 +41,14 @@ def material() -> Response:
 
     return jsonify(results)
 
+
+@app.route('/getCategory', methods=['POST'])
+def getCategory() -> Response:
+    material: list[str] = json.loads(request.data)[0]["material"]
+    things: list[str] = json.loads(request.data)[0]["things"]
+    r = getcategory(material,things)
+
+    return jsonify(r)
 
 @app.route('/user/<name>/password/<pw>', methods=['GET'])
 def getUser(name, pw) -> Response:

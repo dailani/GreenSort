@@ -37,6 +37,10 @@ def analyze_image(image_path):
     return object_type, object_material
 
 
+analyze_image('artifacts/cropped_0.jpg')
+analyze_image('artifacts/cropped_1.jpg')
+
+
 # creating threads
 t1 = threading.Thread(target=task1, name='t1')
 t2 = threading.Thread(target=task2, name='t2')
@@ -48,7 +52,4 @@ t2.start()
 # wait until all threads finish
 t1.join()
 t2.join()
-
-analyze_image('artifacts/cropped_0.jpg')
-analyze_image('artifacts/cropped_1.jpg')
 

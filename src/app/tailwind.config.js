@@ -2,7 +2,12 @@
 export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
-		extend: {}
+		extend: {
+			translate: {
+				'0': '0',
+				'full': '100%',
+			  },
+		}
 	},
 	plugins: []
 };

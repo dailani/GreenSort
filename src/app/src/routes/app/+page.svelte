@@ -56,7 +56,11 @@
 		CameraPreview.start({
 			parent: 'cameraPreview',
 			position: 'rear',
-			toBack: true
+			disableAudio: true,
+			enableZoom: true,
+			toBack: true,
+			lockAndroidOrientation: true,	
+			rotateWhenOrientationChanged: false
 		});
 	}
 
@@ -65,7 +69,7 @@
 			return;
 		}
 
-		CameraPreview.stop();
+		//CameraPreview.stop();
 		cameraRunning = false;
 	}
 
@@ -111,8 +115,11 @@
 
 <div class="h-full w-full  {currentState == AppState.ObjectDetails ? '' : 'py-2 px-3'}">
 	{#if currentState == AppState.Capturing}
-		<div id="cameraPreview" class="h-full"/>
-		<button on:click={captureImage} class="absolute bottom-2 left-1/2 right-1/2">O</button>
+		<div class="w-full h-full -z-10" id="cameraPreview" />
+		<div class="w-full absolute left-0 bottom-4 flex justify-center">
+
+			<button on:click={captureImage} class="w-16 h-16 bg-gray-400 rounded-full"></button>
+		</div>
 	{:else if currentState == AppState.Cropping}
 		<ImageBackgroundLoader
 			title="Detecting Objects..."

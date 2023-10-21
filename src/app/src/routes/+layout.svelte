@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	import '../app.css';
 	import { Camera } from '@capacitor/camera';
-	import { CameraPreview } from '@capacitor-community/camera-preview';
 
 	onMount(() => {
 		Camera.requestPermissions();

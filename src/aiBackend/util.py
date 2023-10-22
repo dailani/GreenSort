@@ -92,207 +92,503 @@ def getcategory(material: list[str],things:list[str]) :
     response = model.predict(f"""Multi-choice problem: 
     Which category(s) could this object belong to?
     Please only use the following categories: 
-    Drain cleaner
-    ,Battery | Rechargeable battery
-    ,File/Data destruction
-    ,File folder
-    ,Recyclable glass
-    ,Old clothes | Shoes
-    ,Used oil
-    ,Old tires
-    ,Aluminum foil
-    ,Dental amalgam
-    ,Ammonia
-    ,Aquarium/Terrarium (carriable by one person)
-    ,Asbestos
-    ,Ash
-    ,Car roof box
-    ,Car bicycle rack
-    ,Car luggage rack
-    ,Car child seat
-    ,Slot car racing track
-    ,Cars | Car parts
-    ,Baking mold
-    ,Oven
-    ,Baking paper
-    ,Bathroom fixtures
-    ,Railway sleepers
-    ,Construction waste mix
-    ,Tree trunk
-    ,Rubble
-    ,Side table
-    ,Gasoline canister
-    ,Cutlery
-    ,Duvet | packaged
-    ,Bed frame
-    ,Bed drawer
-    ,Bed linen
-    ,Beer tent set
-    ,Picture frames | Canvases
-    ,Pool table
-    ,Organic waste
-    ,Biodegradable trash bags
-    ,Bitumen
-    ,Bleach
-    ,Lead foil
-    ,Flowers
-    ,Potting soil
-    ,Flower box/Flower pot | Plastic, metal, untreated wood
-    ,Flower box/Flower pot | Clay
-    ,Floor coverings
-    ,Boiler
-    ,Brake fluid
-    ,Bread
-    ,Ironing board
-    ,CD | DVD
-    ,Chemical toilet
-    ,Chemicals
-    ,Computer
-    ,Coronavirus test
-    Couch | Sofa
-    ,Roof antennas/Satellite dishes
-    ,Roofing felt
-    ,Roof tiles
-    ,Mineral wool insulation material
-    ,Disinfectant
-    ,Floppy disk
-    ,Latex paint
-    ,Cans
-    ,Tricycle
-    ,Printer/Copier/Fax machine
-    ,Printer cartridge
-    ,Fertilizer
-    ,Instantaneous water heater
-    ,Disposable e-cigarettes
-    ,Disposable tableware
-    ,Electric grill
-    ,Large electrical appliance (Washing machine, tumble dryer, refrigerator, etc.)
-    ,Small electrical devices
-    ,Energy-saving bulb
-    ,Descaler
-    ,Excavated soil
-    ,Bicycle
-    ,Bike trailer
-    ,Bicycle child seat
-    ,Bike tires
-    ,Folding boat | dismantled
-    ,Wheel rim
-    ,Window
-    ,Television
-    ,Fire extinguisher
-    ,Fireworks
-    ,Wing/Piano | Wing dismantled
-    ,Foil
-    ,Coat rack
-    ,Curtain rod
-    ,Garden tool
-    ,Garden shed
-    ,Garden furniture | Treated wood
-    ,Garden furniture | Plastic, metal, and untreated wood
-    ,Garden hose
-    ,Gas cartridge
-    ,Gift ribbon
-    ,Gift paper
-    ,Dishware
-    ,Beverage carton
-    ,Poison
-    ,Glass block
-    ,Glass plates from furniture (except table glass plates)
-    ,Glass pane
-    ,Light bulb
-    ,Grill | Gas grill without gas bottle
-    ,Charcoal
-    ,Garden waste
-    ,Rubber
-    ,Hairbrush
-    ,Hair
-    ,Hand cart
-    ,Pet cage | Outside
-    ,Pet cage | Inside
-    ,Heater | Electric
-    ,Heater | Non-electric
-    ,Heating oil
-    ,Patio heater
-    ,Hollow glass
-    ,Hollywood swing | dismantled
-    ,Wood | treated
-    ,Pallet wood furniture | uncontaminated
-    ,Wooden furniture | treated
-    ,Wooden furniture | untreated
-    ,Wooden pallet
-    ,Wood preservative
-    ,Wooden toy
-    ,Wood | untreated
-    ,Hygiene paper
-    ,Insect spray
-    ,Insulated jug
-    ,Blind | Exterior
-    ,Blind | Interior
-    ,Yogurt cup
-    ,Cable
-    ,Coffee filter
-    ,Coffee capsule
-    ,Cardboard
-    ,Cassette
-    ,Ceramics and porcelain
-    ,Candle
-    ,Stroller
-    ,Cushion
-    ,Box | Treated wood
-    ,Box | Metal, plastic, untreated wood
-    ,Clear plastic sleeve
-    ,Tape
-    ,Glue
-    ,Small animal litter
-    ,Bone
-    ,Cooktop
-    ,Suitcase
-    ,Coal
-    ,Recyclable Plastic
-    ,Recyclable Glass
-    ,Recyclable Paper
+    Battery,
+    Old batteries,
+    Filing folder,
+    Alarm system,
+    Alteisen,
+    Old glass,
+    Old dresses,
+    Old oil,
+    Waste paper,
+    Tire,
+    Aluminium,
+    Antenna,
+    Aquarium,
+    drug,
+    Asbestos,
+    ash,
+    Car battery,
+    Autofelgen,
+    Machine,
+    car tire,
+    Auto parts,
+    oven,
+    Bathtub,
+    Batteries,
+    Construction,
+    Building rubble,
+    stain,
+    clothing,
+    lighting,
+    Lighting body,
+    Petrol,
+    Bed,
+    Bed linen,
+    Bioabfall,
+    Screen devices,
+    Bleechs, sheet metal parts,
+    Lead batteries,
+    Flower boxes,
+    Flower pots,
+    Floor coverings,
+    Boiler,
+    drilling machine,
+    Fire protection system,
+    frying pan,
+    brake fluid,
+    Bread maker,
+    Books,
+    Iron,
+    Ceranfeld,
+    Chemical,
+    Computer/PC,
+    Computer scrap,
+    Computer parts,
+    Couch,
+    Roofing felt,
+    Roof tile,
+    Insulation,
+    Ceiling slabs,
+    Disinfectant,
+    Dislike,
+    Dispersion,
+    Display,
+    tricycle,
+    Drucker, Toner,
+    Printer cartridges,
+    Extractor hood,
+    DVD - Player,
+    Owner kocher,
+    Equipped kitchen,
+    Iron parts,
+    Cupboard,
+    Ice cube leaders,
+    Electrical devices,
+    Elektrooboiler,
+    Electrical appliances,
+    Elektrogrill,
+    Electric stove,
+    Electrocular,
+    Electrical cleaning devices,
+    Electric motors,
+    Electronic,
+    Electro,
+    Power tool,
+    Energy -saving lamps,
+    epilator,
+    Erdaushub,
+    Espresso machine,
+    Leftovers,
+    Bicycle, bicycles,
+    Bicycle parts,
+    Colors, color buckets,
+    fax machine,
+    rims,
+    Window, window frame,
+    TV,
+    hard disk,
+    Slices,
+    Fire extinguisher,
+    Fieberhermometer,
+    Fitness equipment,
+    Flachglas,
+    Bottle,
+    Meat,
+    Tiles,
+    Tile cutter,
+    hairdryer,
+    Foil,
+    Foil welding device,
+    Camera,
+    Photos, photo paper,
+    Photolor,
+    Deep fryer,
+    Frost protection,
+    Garden waste,
+    Garden tools,
+    Gardening,
+    garden furniture,
+    garden fence,
+    Gasentladungs ​​lamps,
+    Gas devices,
+    Gasofen,
+    Gas bottles,
+    Gas cartridges,
+    Gas grill,
+    Host,
+    Freezer,
+    freezer,
+    freezer,
+    Slot machine,
+    Dishes,
+    dishwasher,
+    Machinery machine,
+    Gips, Gipskarton,
+    Smoothing iron,
+    Vote,
+    Mususteine,
+    Glass fiber products,
+    Glass wolle,
+    Glass,
+    Light bulb,
+    Grass section, green section,
+    Grill, grill accessories,
+    Green waste,
+    Rubber,
+    Hairdryer,
+    Halogen lamp,
+    Handy,
+    Household batteries,
+    Household appliances,
+    Household appliances,
+    Heimorgel,
+    Home trainer,
+    Heißmangel,
+    heating system,
+    radiator,
+    Heating oil,
+    Radiator,
+    Heating,
+    Herd,
+    Hi-fi systems,
+    Hi-fi devices,
+    high pressure cleaner,
+    Hollywoodschaukel,
+    Wood,
+    Wood preservative,
+    Hometrainer,
+    Dog droppings,
+    Impregnation,
+    Induction stove,
+    Induction hob,
+    Insect spray,
+    Insulating can,
+    insulating material,
+    It devices,
+    Jägerzaun,
+    Jealousy,
+    Yoghurt cup,
+    Cable,
+    Tile,
+    coffee machine,
+    coffee grinder,
+    Cage,
+    Kartonage,
+    Cassettes,
+    Cash register,
+    In the catalog,
+    cat litter,
+    Bend,
+    Candles,
+    stroller,
+    Piano,
+    Adhesive tapes,
+    adhesive,
+    Clothing,
+    Priority,
+    climbing frame,
+    air conditioner,
+    Climatic car,
+    Air conditioner,
+    Bone,
+    Button,
+    Kocher,
+    Hob, hob,
+    Pot, cookware,
+    Suitcase,
+    Capacitors,
+    Consetce,
+    Convectomate,
+    Pillow,
+    Copy,
+    Copy,
+    Cork, nature,
+    Cosmetics,
+    Kitchen,
+    Kitchen appliances,
+    Kitchen,
+    Radiator,
+    Cooling system,
+    Refrigerator,
+    Refrigerator,
+    Freezer,
+    Synthetic resin,
+    Plastics,
+    Plastic packaging,
+    Lacquer,
+    charger,
+    Laminate,
+    Lamp,
+    Laptop,
+    glaze,
+    Slatted frame,
+    Laub,
+    Wheel,
+    drive,
+    Lauge,
+    Groceries,
+    LED bulbs,
+    Manager,
+    Leadership,
+    glue,
+    Director,
+    Fluorescent tubes,
+    fairy lights,
+    Lithiumbatterien,
+    Curling,
+    solvent,
+    Air filter,
+    awning,
+    Mattress,
+    Medication,
+    Messer,
+    Measuring device,
+    Metal,
+    Metal scrap,
+    Metal parts,
+    microwave,
+    Milk frother,
+    Milk bag,
+    Mineral wool,
+    Mixer,
+    Furniture,
+    Furniture polish,
+    Modem,
+    Engine,
+    Motorcycle tires,
+    Motorcycle parts,
+    Mouse,
+    Munition,
+    Musical instrument,
+    Night storage stoves,
+    Nail,
+    Nail polish,
+    sewing machine,
+    Negative,
+    Neon tube,
+    power adapter,
+    Ni-CD Batterieen,
+    Nitroverdener,
+    Notebook,
+    OBSTRESTE,
+    Oven,
+    Oil filter,
+    The beer,
+    Elaps,
+    Beer radiator,
+    Beer tank,
+    Packpapier,
+    Pallet,
+    Palisade,
+    Paper,
+    cardboard,
+    Screen,
+    parquet,
+    Pesticides,
+    PET bottles,
+    Pans,
+    Plant,
+    Pesticide,
+    Brush cleaner,
+    Pizza oven,
+    Playstation,
+    plastic cup,
+    Plastic cutlery,
+    Plastic objects,
+    Plastic cabinet,
+    Plastic belt,
+    Boost,
+    plastic bags,
+    Record player,
+    Upholstered furniture,
+    porcelain,
+    Postcards,
+    On the prospectus,
+    PU foam cans,
+    Cleaning agent,
+    PVC-Boden,
+    Type of waste,
+    Mercury thermometer,
+    Mercury stamping lamps,
+    Radiator,
+    Radio, radio recorder,
+    Radiocker,
+    mowing machine,
+    razor,
+    Room spray,
+    Receiver,
+    Regal,
+    Regents,
+    Tires,
+    cleaning supplies,
+    Rice cooker,
+    Rigip plate,
+    pipe cleaner,
+    Role grains,
+    Roller,
+    wheelchair,
+    X -rays,
+    Rustless,
+    Rust protection,
+    Red light lamp,
+    Router,
+    soot,
+    Sawing,
+    acid,
+    Safe,
+    Sandpit,
+    Sandwichmaker,
+    Oxygen bottles,
+    Pest control,
+    Pollutants,
+    Record,
+    Record player,
+    Rocking chair,
+    Foammum,
+    Foam,
+    Slingshot,
+    Sleds,
+    folder,
+    Wardrobe,
+    Screw,
+    Desk,
+    Shoes,
+    Second adhesive,
+    Armchair,
+    Side by Side,
+    Ski,
+    Snowboard,
+    Sofa,
+    Solar systems,
+    Solar cells,
+    Sunbed,
+    parasol,
+    Chipboard,
+    Food fat, food oil,
+    Dining,
+    Bulky waste,
+    Spiegel,
+    Gaming,
+    Game console,
+    toys,
+    Spirit,
+    Spray can,
+    Sports equipment,
+    Spray,
+    kitchen sink,
+    dishwasher,
+    Blender,
+    Vacuum cleaner,
+    Floor lamp,
+    Streusplit,
+    Chair, chairs,
+    Styrofoam,
+    surfboard,
+    Tannenbaum,
+    Mat,
+    Wallpaper,
+    calculator,
+    Diving equipment,
+    Telephone,
+    Telecommunications devices,
+    Carpet,
+    Carpet glue,
+    Terpentine,
+    Thermomet is electricity.,
+    Thermostat,
+    Tierkadaver,
+    Tier,
+    Table,
+    table tennis table,
+    Toaster,
+    Toilet lid,
+    Transformer,
+    Treasure,
+    Wood,
+    dryer,
+    Type,
+    Door frame,
+    Door frame,
+    TV,
+    Weed killer,
+    Underbody protection,
+    Consumer electronics,
+    Vacuumer,
+    Ventilator,
+    Video system,
+    Video box,
+    Camcorder,
+    Video recorder,
+    Bird bar,
+    Waffle iron,
+    weapons,
+    Wall cladding,
+    Heat bottle,
+    Bathroom sink,
+    Wasolate,
+    Laundry,
+    Crawl,
+    Washing slider,
+    Tumble dryer,
+    Wall lamp,
+    washing machine,
+    laundry detergent,
+    Water filter,
+    Kettle,
+    Toilet pool,
+    WC cleaner,
+    Alarm clock,
+    Christmas tree,
+    Tool electr.,
+    Wii consoles Controler,
+    Xbox Konsole Controler,
+    cement,
+    brick,
+    Zinkers,
+    Zink,
+    Spark plugs.
 
-    Text: 
-    objects: [\'laptop\', \'macbook air\', \'laptop computer\'],
-    object_materials: [\'aluminium\', \'macbook air\', \'metal\']
+    Text: objects: ['laptop', 'macbook air', 'laptop computer'], object_materials: ['aluminium', 'macbook air', 'metal']
+    Categories: [Computer]
 
-    The answer is: [Computer]
+    Text: objects: ['person', 'man', 'glasses'], object_materials: ['plastic', 'glass', 'metal']
+    Categories: [Meat, Plastic objects, Glass]
 
-    Text: objects: [\'person\', \'man\', \'glasses\'], object_materials: [\'plastic\', \'glass\', \'metal\']
-    The answer is: [Organic waste, Recyclable Plastic]
+    Text: object_type:['bottle', 'wine bottle', 'klar'], object_material:['glass', 'plastic', 'bottle']
+    Categories: [Glass, Plastic objects]
 
-    Text: object_type:[\'bottle\', \'wine bottle\', \'klar\'], object_material:[\'glass\', \'plastic\', \'bottle\']
-    The answer is: [Recyclable Plastic, Recyclable Glass]
+    Text: object_type:['bottle', 'glass bottle', 'empty bottle'], object_material:['glass', 'clear glass', 'plastic']
+    Categories: [Glass, Plastic objects]
 
-    Text: object_type:[\'bottle\', \'glass bottle\', \'empty bottle\'], object_material:[\'glass\', \'clear glass\', \'plastic\']
-    The answer is: [Recyclable Plastic, Recyclable Glass]
+    Text: ['bowl', 'container', 'plastic container'], object_material:['plastic', 'clear plastic', 'plastic container']
+    Categories: [Paper, Plastic objects]
 
-    Text: object_type:[\'bowl\', \'container\', \'plastic container\'], object_material:[\'plastic\', \'clear plastic\', \'plastic container\']
-    The answer is: [Recyclable Plastic]
+    Text: ['person', 'man', 'desk'], object_material:['plastic', 'wood', 'metal']
 
-    Text: object_type:[\'bowl\', \'container\', \'paper towel\'], object_material:[\'plastic\', \'paper\', \'paper towels\']
-    The answer is: [Recyclable Plastic, Recyclable Paper]
+    Categories: [Plastic objects, Wood, Metal]
 
-    Text: object_type:[\'person\', \'man\', \'desk\'], object_material:[\'plastic\', \'wood\', \'metal\']
-    The answer is: [Organic waste, Pallet wood furniture | uncontaminated, Wooden furniture | treated, Wooden furniture | untreated ]
+    Text: object_type:['bottle', 'spray bottle', 'spray'], object_material:['plastic', 'unanswerable', 'plastik']
+    Categories: [Plastic objects, Spray]
 
-    Text: object_type:[\'bottle\', \'spray bottle\', \'spray\'], object_material:[\'plastic\', \'unanswerable\', \'plastik\']
-    The answer is: [Recyclable Plastic]
+    Text: object_type: ['chair', 'armchair', 'pillow'], object_material:['fabric', 'linen', 'cotton']
+    Categories: [Chair, Couch, Clothing]
 
-    Text: object_type:[\'chair\', \'armchair\', \'pillow\'], object_material:[\'fabric\', \'linen\', \'cotton\']
-    The answer is: [Couch | Sofa]
+    Text: object_type:['pepsi', 'pepsi can', 'can'], object_material:['metal', 'pepsi', 'aluminum']
+    Categories: [Metal, Aluminium]
 
-    Text: object_type:[\'pepsi\', \'pepsi can\', \'can\'], object_material:[\'metal\', \'pepsi\', \'aluminum\']
-    The answer is: [Cans]
+    Text: object_type:['pool table', 'snooker table', 'pool'], object_material:['pool table', 'wood', 'velvet']
+    Categories: [Wood, Couch]
 
-    Text: object_type:[\'pool table\', \'snooker table\', \'pool\'], object_material:[\'pool table\', \'wood\', \'velvet\']
-    The answer is: [Wooden furniture | treated]
+    Text: object_type:['pool table', 'snooker table', 'pool'], object_material:['pool table', 'wood', 'velvet']
+    Categories: [Wood, Table]
 
-    Text: object_type:[\'marker\', \'blue marker\', \'schneider marker\'], object_material:[\'plastic\', \'germany\', \'paper\']
-    The answer is: [Recyclable Plastic]
+    Text: object_type:['marker', 'blue marker', 'schneider marker'], object_material:['plastic', 'germany', 'paper']
+    Categories: [Plastic objects]
 
     Text: object_type:['box', 'cardboard box', 'unanswerable'], object_material:['cardboard', 'paper', 'wood']
-    The answer is: [Cardboard]
+    Categories: [cardboard, Paper, Wood]
+
 
     Text: object_type:{t}, object_material:{m}
     The answer is: """, **parameters)

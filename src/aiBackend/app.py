@@ -4,7 +4,7 @@ from flask_cors import CORS
 from util import crop_seperate_objects, analyze_image,getcategory
 import concurrent.futures
 
-from util2 import getuser, getadress
+from util2 import getuser, address
 
 app = Flask(__name__)
 CORS(app)
@@ -61,7 +61,7 @@ def getUser(name, pw) -> Response:
 @app.route('/method/<category>', methods=['GET'])
 def getAdress(category) -> Response:
     print(category)
-    r = getadress(category)
+    r = address(category)
     return jsonify(r)
 
 

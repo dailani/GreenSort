@@ -36,7 +36,7 @@ def getuser(user: str, password: str):
             print("PostgreSQL connection is closed")
 
 
-def getadress(category: str):
+def address(category: str):
     # Database connection settings
 
     # Initialize the connection outside the try block
@@ -48,7 +48,7 @@ def getadress(category: str):
 
         # Create a cursor
         cursor = connection.cursor()
-        cursor.execute('SELECT * FROM "categories" WHERE category = %s OR category_english = %s;', (category,category))
+        cursor.execute(f'SELECT * FROM "categories" WHERE category ILIKE \'{category}\' OR category_english ILIKE \'{category}\';')
         result = cursor.fetchone()
         print(result)
         cursor.close()

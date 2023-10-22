@@ -18,6 +18,7 @@
 	 enum AppState {
 		Capturing,
 		Cropping,
+		NoCroppingResults,
 		ObjectSelection,
 		ObjectClassification,
 		ObjectDetails,
@@ -47,19 +48,21 @@
 
 		setTimeout(startCameraPreview, 50);
 
-		App.addListener("backButton", e => {
-			if (currentState == AppState.Capturing) {
+		App.addListener("backButton", triggerBack)
+	});
+
+	function triggerBack() {
+		if (currentState == AppState.Capturing) {
 				App.exitApp();	
 				return;
 			} 
 
-			if (currentState == AppState.ObjectSelection || currentState == AppState.Error) {
+			if (currentState == AppState.ObjectSelection || currentState == AppState.Error || currentState == AppState.NoCroppingResults) {
 				updateCurrentState(AppState.Capturing);
 			} else if (currentState == AppState.ObjectDetails) {
 				updateCurrentState(AppState.ObjectSelection);
 			}
-		})
-	});
+	}
 
 	function updateCurrentState(state: AppState) {
 		currentState = state;
@@ -138,9 +141,14 @@
 		} catch (error) {
 			errorMessage = String(error);
 			updateCurrentState(AppState.Error);
+			return;
 		}
 
-		updateCurrentState(AppState.ObjectSelection);
+		if (objectImages == null || objectImages?.length == 0) {
+			updateCurrentState(AppState.NoCroppingResults);
+		} else {
+			updateCurrentState(AppState.ObjectSelection);
+		}
 	}
 
 	async function selectObject(objectImage: string) {
@@ -171,6 +179,14 @@
 			title="Detecting Objects..."
 			src="data:image/png;base64,{userImage ?? ''}"
 		/>
+	{:else if currentState == AppState.NoCroppingResults} 
+	<div class="w-full h-full flex justify-center items-center">
+		<img src="data:image/png;base64,{userImage}" alt="" class="opacity-60 blur-sm" />
+		<div class="absolute w-full h-full flex flex-col gap-10 justify-center items-center z-30 top-0">
+			<p class="font-bold text-xl text-red-700">No objects found!</p>
+			<button class="px-4 py-2 bg-blue-600 rounded-md" on:click={triggerBack}>Go back</button>
+		</div>
+	</div>
 	{:else if currentState == AppState.ObjectSelection}
 		<h2 class="font-bold text-xl text-center">Select an object</h2>
 		<hr class="my-2" />

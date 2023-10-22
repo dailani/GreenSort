@@ -1,9 +1,9 @@
 import psycopg2
 
 db_settings = {
-    "user": "daddy",
-    "password": "1234",
-    "host": "34.141.65.14",
+    "user": "kek",
+    "password": "12345",
+    "host": "35.198.149.112",
     "database": "postgres"
 }
 
@@ -20,7 +20,7 @@ def getuser(user: str, password: str):
 
         # Create a cursor
         cursor = connection.cursor()
-        cursor.execute('SELECT * FROM "user" WHERE name = %s AND password = %s;', (user, password))
+        cursor.execute('SELECT * FROM "users" WHERE name = %s AND password = %s;', (user, password))
         result = cursor.fetchone()
         print(result)
         cursor.close()

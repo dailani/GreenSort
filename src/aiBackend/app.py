@@ -50,7 +50,7 @@ def getCategory() -> Response:
 
     return jsonify(r)
 
-@app.route('/user/<name>/password/<pw>', methods=['GET'])
+@app.route('/users/<name>/password/<pw>', methods=['GET'])
 def getUser(name, pw) -> Response:
     print(name)
     print(pw)

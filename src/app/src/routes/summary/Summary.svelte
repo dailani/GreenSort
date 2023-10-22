@@ -4,7 +4,7 @@
 	export let src: string;
     export let onBack: () => void;
     export let materials: ImageMaterials;
-
+    export let category: any;
     
 	interface ImageMaterials {
 	materials: string[];
@@ -26,8 +26,8 @@
         </div>
           <div class="flex flex-col py-1 px-2  bg-[#47A992] shadow-sm rounded-b-md">
             <div class="flex flex-col p-2 items-center">
-                <div class="text-md items-center text-white "> This item consists of</div>
-                <div class=" text-2xl text-white font-bold flex flex-wrap text-clip">{materials == null ? 'Not Found' : materials.material}</div>
+                <div class="text-md items-center text-white "> This item is most likely</div>
+                <div class="text-center text-2xl text-white font-bold flex flex-wrap text-clip">{materials == null ? 'Not Found' : materials.things}</div>
 
             </div>
             <div class=" flex flex-col items-center gap-2 py-[7px] text-white">
@@ -35,15 +35,19 @@
                 <div class="text-md items-center text-white ">Carbon Credit</div>
                     <div class="text-2xl font-mono font-bold text-center">0.5</div>
                 </div>
-              
+            </div>
+            <div class="flex flex-col p-2 items-center">
+                <div class="text-md items-center text-white "> This item consists of</div>
+                <div class="text-center text-2xl text-white font-bold flex flex-wrap text-clip">{materials == null ? 'Not Found' : materials.material}</div>
+
             </div>
         </div>
     </div>
     <div class=" bg-[#47A992] rounded-md shadow-md text-white">
         <div>
             <div class="flex flex-row justify-between p-2">
-                <div class="text-xl font-bold">Recycling Details</div>
-                <div class="text-xl font-bold"></div>
+                <div class="text-xl font-bold">Item Category:</div>
+                <div class="text-xl font-bold">{category}</div>
             </div>
             <div class="flex flex-col gap-y-2 p-2">
                 <div class="flex flex-row justify-between">

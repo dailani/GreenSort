@@ -4,7 +4,7 @@
 	import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 	import { onMount } from 'svelte';
 	import ImageBackgroundLoader from './ImageBackgroundLoader.svelte';
-	import { getImages } from '$lib/backend/ai-controller';
+	import { getCategory, getImages } from '$lib/backend/ai-controller';
 	import { getMaterial } from '$lib/backend/ai-controller';
 	import { App } from '@capacitor/app';
 	import Summary from '../summary/Summary.svelte';
@@ -32,6 +32,8 @@
   }
 
   	let globalMaterials: ImageMaterials;
+
+	let globalCategory: any;
 
 	let cameraRunning: boolean = false;
 
@@ -158,6 +160,9 @@
 		try {
 			const materials = await getMaterial({ image: objectImage });
 			globalMaterials = materials  ;
+			const category = await getCategory({ material: materials.materials , things: materials.things } )
+			globalCategory = category;
+			
 		} catch (error) {
 			errorMessage = String(error);
 			updateCurrentState(AppState.Error);
@@ -203,7 +208,7 @@
 			src="data:image/png;base64,{currentObjectImage ?? ''}"
 		/>
 	{:else if currentState == AppState.ObjectDetails}
-		<Summary materials={globalMaterials} onBack={handleStateChange} src="data:image/png;base64,{currentObjectImage ?? ''}"/>
+		<Summary category={globalCategory} materials={globalMaterials} onBack={handleStateChange} src="data:image/png;base64,{currentObjectImage ?? ''}"/>
 	{:else if currentState == AppState.Error}
 		<h2 class="font-bold text-lg text-red-700">An error occured</h2>
 		<p>{errorMessage}</p>

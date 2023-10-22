@@ -4,7 +4,7 @@
 	import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 	import { onMount } from 'svelte';
 	import ImageBackgroundLoader from './ImageBackgroundLoader.svelte';
-	import { getImages, type ImageMaterials } from '$lib/backend/ai-controller';
+	import { getCategory, getImages, type ImageMaterials } from '$lib/backend/ai-controller';
 	import { getMaterial } from '$lib/backend/ai-controller';
 	import { App } from '@capacitor/app';
 	import Summary from '../summary/Summary.svelte';
@@ -27,9 +27,6 @@
 		currentState = AppState.ObjectSelection;
 	};
 
-
-	let globalCategory: any;
-
 	let cameraRunning: boolean = false;
 
 	let userImage: string | null = null;
@@ -37,7 +34,7 @@
 	let objectImages: string[] | null = null;
 	let currentObjectImage: string | null = null;
 	let currentObjectMaterials: ImageMaterials | null = null;
-	let currentObjectDetails: any | null = null;
+	let currentObjectCategory: any | null = null;
 
 	let errorMessage: string | null = null;
 
@@ -160,11 +157,11 @@
 		updateCurrentState(AppState.ObjectClassification);
 
 		try {
-			const materials = await getMaterial({ image: objectImage });
-		
+			currentObjectCategory = await getCategory(material);
 		} catch (error) {
 			errorMessage = String(error);
 			updateCurrentState(AppState.Error);
+			return;
 		}
 
 		updateCurrentState(AppState.ObjectDetails);
@@ -212,7 +209,12 @@
 			src="data:image/png;base64,{currentObjectImage ?? ''}"
 		/>
 	{:else if currentState == AppState.ObjectDetails}
-		<Summary materials={currentObjectMaterials} onBack={handleStateChange} src="data:image/png;base64,{currentObjectImage ?? ''}"/>
+		<Summary
+			materials={currentObjectMaterials ?? { material: [], things: [] }}
+			category={currentObjectCategory}
+			onBack={handleStateChange}
+			src="data:image/png;base64,{currentObjectImage ?? ''}"
+		/>
 	{:else if currentState == AppState.Error}
 		<h2 class="font-bold text-lg text-red-700">An error occured</h2>
 		<p>{errorMessage}</p>

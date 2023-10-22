@@ -20,8 +20,8 @@ export async function getImages(content: SourceImage) {
 interface CroppedImages {
 	image: string;
 }
-interface ImageMaterials {
-	materials: string[];
+export interface ImageMaterials {
+	material: string[];
 	things: string[];
 }
 

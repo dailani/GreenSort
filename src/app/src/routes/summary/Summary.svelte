@@ -5,7 +5,7 @@
     export let onBack: () => void;
     export let materials: ImageMaterials;
     import trashcanImg from '$lib/static/recycle.svg'
-
+    import upArrow from '$lib/static/up-arrow.png'
     
 	interface ImageMaterials {
 	materials: string[];
@@ -13,8 +13,8 @@
 }   
 </script>
 
-<div class=" flex flex-col bg-[#1c0418] px-4 py-2 rounded-b-[48px] items-center justify-center gap-[1px]">
-    <button on:click={onBack} class="text-white font-bold border-white rounded-2xl w-fit px-2 py-[1px] " >Back</button>
+<div on:click={onBack} class=" flex flex-col bg-[#1c0418] px-4 py-2 rounded-b-[48px] items-center justify-center gap-[1px]">
+    <p  class="text-neutral-100 text-sm  border-white rounded-2xl w-fit px-2 " >Back to image selection</p>
 </div>
 
 <div class="flex flex-col px-4 gap-y-4  py-5">

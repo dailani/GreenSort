@@ -4,18 +4,14 @@
 	import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 	import { onMount } from 'svelte';
 	import ImageBackgroundLoader from './ImageBackgroundLoader.svelte';
-	import { getCategory, getImages } from '$lib/backend/ai-controller';
+	import { getImages, type ImageMaterials } from '$lib/backend/ai-controller';
 	import { getMaterial } from '$lib/backend/ai-controller';
 	import { App } from '@capacitor/app';
 	import Summary from '../summary/Summary.svelte';
-	import GalleryIcon from "$lib/static/gallery.svg"
+	import GalleryIcon from '$lib/static/gallery.svg';
+	import ObjectImageCard from './ObjectImageCard.svelte';
 
-
-	interface ImageMaterials {
-	materials: string[];
-	things: string[];
-}
-	 enum AppState {
+	enum AppState {
 		Capturing,
 		Cropping,
 		NoCroppingResults,
@@ -28,10 +24,10 @@
 	let currentState: AppState = AppState.Capturing;
 
 	const handleStateChange = () => {
-    currentState = AppState.ObjectSelection;
-  }
+		currentState = AppState.ObjectSelection;
+	};
 
-  	let globalMaterials: ImageMaterials;
+	let globalCategory: any;
 
 	let globalCategory: any;
 
@@ -41,29 +37,34 @@
 
 	let objectImages: string[] | null = null;
 	let currentObjectImage: string | null = null;
+	let currentObjectMaterials: ImageMaterials | null = null;
 	let currentObjectDetails: any | null = null;
 
 	let errorMessage: string | null = null;
 
 	onMount(() => {
-		console.log("App Mounted!");
+		console.log('App Mounted!');
 
 		setTimeout(startCameraPreview, 50);
 
-		App.addListener("backButton", triggerBack)
+		App.addListener('backButton', triggerBack);
 	});
 
 	function triggerBack() {
 		if (currentState == AppState.Capturing) {
-				App.exitApp();	
-				return;
-			} 
+			App.exitApp();
+			return;
+		}
 
-			if (currentState == AppState.ObjectSelection || currentState == AppState.Error || currentState == AppState.NoCroppingResults) {
-				updateCurrentState(AppState.Capturing);
-			} else if (currentState == AppState.ObjectDetails) {
-				updateCurrentState(AppState.ObjectSelection);
-			}
+		if (
+			currentState == AppState.ObjectSelection ||
+			currentState == AppState.Error ||
+			currentState == AppState.NoCroppingResults
+		) {
+			updateCurrentState(AppState.Capturing);
+		} else if (currentState == AppState.ObjectDetails) {
+			updateCurrentState(AppState.ObjectSelection);
+		}
 	}
 
 	function updateCurrentState(state: AppState) {
@@ -77,6 +78,7 @@
 
 		if (state <= AppState.ObjectSelection) {
 			currentObjectImage = null;
+			currentObjectMaterials = null;
 		}
 	}
 
@@ -92,12 +94,12 @@
 				disableAudio: true,
 				enableZoom: true,
 				toBack: true,
-				lockAndroidOrientation: true,	
+				lockAndroidOrientation: true,
 				rotateWhenOrientationChanged: false
 			});
 			cameraRunning = true;
 		} catch (error) {
-			console.log("Starting Camera Preview Failed. Retrying later...")
+			console.log('Starting Camera Preview Failed. Retrying later...');
 			setTimeout(startCameraPreview, 250);
 			cameraRunning = false;
 		}
@@ -115,7 +117,7 @@
 	async function captureImage() {
 		const image = await CameraPreview.capture({
 			quality: 90
-		})
+		});
 
 		await processImage(image.value);
 	}
@@ -153,16 +155,14 @@
 		}
 	}
 
-	async function selectObject(objectImage: string) {
+	async function selectObject(objectImage: string, material: ImageMaterials) {
 		currentObjectImage = objectImage;
+		currentObjectMaterials = material;
 		updateCurrentState(AppState.ObjectClassification);
 
 		try {
 			const materials = await getMaterial({ image: objectImage });
 			globalMaterials = materials  ;
-			const category = await getCategory({ material: materials.materials , things: materials.things } )
-			globalCategory = category;
-			
 		} catch (error) {
 			errorMessage = String(error);
 			updateCurrentState(AppState.Error);
@@ -172,34 +172,39 @@
 	}
 </script>
 
-<div class="h-full w-full  {currentState == AppState.ObjectDetails ? '' : 'py-2 px-3'}">
+<div class="h-full w-full {currentState == AppState.ObjectDetails ? '' : 'py-2 px-3'}">
 	{#if currentState == AppState.Capturing}
 		<div class="w-full h-full -z-10" id="cameraPreview" />
 		<div class="w-full absolute left-0 bottom-4 flex justify-center">
-			<button on:click={captureImage} class="w-16 h-16 bg-gray-400 rounded-full"></button>
-			<button on:click={enterGalleryImage} class="w-16 h-16 absolute right-4"><img src="{GalleryIcon}" alt="Pick from Gallery"></button>
+			<button on:click={captureImage} class="w-16 h-16 bg-gray-400 rounded-full" />
+			<button on:click={enterGalleryImage} class="w-16 h-16 absolute right-4"
+				><img src={GalleryIcon} alt="Pick from Gallery" /></button
+			>
 		</div>
 	{:else if currentState == AppState.Cropping}
 		<ImageBackgroundLoader
 			title="Detecting Objects..."
 			src="data:image/png;base64,{userImage ?? ''}"
 		/>
-	{:else if currentState == AppState.NoCroppingResults} 
-	<div class="w-full h-full flex justify-center items-center">
-		<img src="data:image/png;base64,{userImage}" alt="" class="opacity-60 blur-sm" />
-		<div class="absolute w-full h-full flex flex-col gap-10 justify-center items-center z-30 top-0">
-			<p class="font-bold text-xl text-red-700">No objects found!</p>
-			<button class="px-4 py-2 bg-blue-600 rounded-md" on:click={triggerBack}>Go back</button>
+	{:else if currentState == AppState.NoCroppingResults}
+		<div class="w-full h-full flex justify-center items-center">
+			<img src="data:image/png;base64,{userImage}" alt="" class="opacity-60 blur-sm" />
+			<div
+				class="absolute w-full h-full flex flex-col gap-10 justify-center items-center z-30 top-0"
+			>
+				<p class="font-bold text-xl text-red-700">No objects found!</p>
+				<button class="px-4 py-2 bg-blue-600 rounded-md" on:click={triggerBack}>Go back</button>
+			</div>
 		</div>
-	</div>
 	{:else if currentState == AppState.ObjectSelection}
 		<h2 class="font-bold text-xl text-center">Select an object</h2>
 		<hr class="my-2" />
 		<div class="grid overflow-auto grid-cols-2 gap-4 p-4 bg-zinc-700 rounded-lg">
 			{#each objectImages ?? [] as objectImage}
-				<button class="w-full max-h-96" on:click={() => selectObject(objectImage)}>
-					<img src="data:image/png;base64,{objectImage}" class="rounded-lg w-full h-full" alt="" />
-				</button>
+				<ObjectImageCard
+					{objectImage}
+					on:select={(e) => selectObject(e.detail.objectImage, e.detail.material)}
+				/>
 			{/each}
 		</div>
 	{:else if currentState == AppState.ObjectClassification}
@@ -208,7 +213,7 @@
 			src="data:image/png;base64,{currentObjectImage ?? ''}"
 		/>
 	{:else if currentState == AppState.ObjectDetails}
-		<Summary category={globalCategory} materials={globalMaterials} onBack={handleStateChange} src="data:image/png;base64,{currentObjectImage ?? ''}"/>
+		<Summary materials={globalMaterials} onBack={handleStateChange} src="data:image/png;base64,{currentObjectImage ?? ''}"/>
 	{:else if currentState == AppState.Error}
 		<h2 class="font-bold text-lg text-red-700">An error occured</h2>
 		<p>{errorMessage}</p>

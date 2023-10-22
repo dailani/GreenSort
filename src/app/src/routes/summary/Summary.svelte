@@ -1,22 +1,19 @@
-
 <script lang="ts">
     	
 	export let src: string;
     export let onBack: () => void;
     export let materials: ImageMaterials;
     export let category: any;
-    
-	interface ImageMaterials {
-	materials: string[];
-	things: string[];
-}
+   
 </script>
 
-<div class=" flex flex-col bg-[#7A3E3E] px-4 py-2 rounded-b-[48px] gap-3 items-center ">
-
-    <p class="text-center text-sm text-neutral-300">This is the summary of the the specific item</p>
-    <button on:click={onBack} class="text-white font-bold border-solid border-2 border-white rounded-2xl w-fit px-2 py-1 " >Back</button>
-
+<div class=" flex flex-col bg-[#7A3E3E] px-4 py-2 rounded-b-[48px] gap-3 items-center">
+	<p class="text-center text-sm text-neutral-300">This is the summary of the the specific item</p>
+	<button
+		on:click={onBack}
+		class="text-white font-bold border-solid border-2 border-white rounded-2xl w-fit px-2 py-1"
+		>Back</button
+	>
 </div>
 
 <div class="flex flex-col px-4 gap-y-4  py-5">

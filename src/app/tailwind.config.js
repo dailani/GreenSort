@@ -4,9 +4,9 @@ export default {
 	theme: {
 		extend: {
 			translate: {
-				'0': '0',
-				'full': '100%',
-			  },
+				0: '0',
+				full: '100%'
+			}
 		}
 	},
 	plugins: []

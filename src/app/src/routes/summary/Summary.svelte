@@ -15,13 +15,12 @@
 <div class="flex flex-col px-4 gap-y-4  py-5">
     <div class="flex flex-col  bg-white rounded-md shadow-md gap-x-5  ">
         <div class=" object-cover">
-            <img {src} alt="" class="w-full max-h-72 object-cover" />
+            <img {src} alt="" class="w-full max-h-82 object-cover" />
         </div>
           <div class="flex flex-col py-1 px-2  bg-[#16b78d] shadow-sm rounded-b-md">
             <div class="flex flex-col p-2 items-center">
                 <div class="text-sm items-center text-white ">This item's material consists of</div>
                 <div class=" text-2xl text-white font-bold flex flex-wrap text-clip">{materials == null ? 'Not Found' : materials.material}</div>
-
             </div>
         
         </div>
@@ -38,7 +37,11 @@
                 <div class="text-xl">Reusable</div>
                 <div class="text-xl">Yes</div>
             </div>
-       
+            <div class="flex flex-col p-2 items-center">
+                <div class="text-md items-center text-white ">Recycle this item and save</div>
+                <div class=" text-2xl text-white font-bold flex flex-wrap text-clip">+12</div>
+                <div class=" text-2xl text-white font-bold flex flex-wrap text-clip">Carbon Credits</div>
+            </div>
           
         </div>
     </div>

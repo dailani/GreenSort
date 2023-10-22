@@ -158,6 +158,7 @@
 
 		try {
 			currentObjectCategory = await getCategory(material);
+			console.log('Category:' + currentObjectCategory);
 		} catch (error) {
 			errorMessage = String(error);
 			updateCurrentState(AppState.Error);

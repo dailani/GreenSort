@@ -52,5 +52,7 @@ export async function getCategory(content: ImageMaterials) {
 	}
 
 	const data = await response.json();
-	return data[0];
+	console.log('Category from backend:' + data);
+
+	return data;
 }

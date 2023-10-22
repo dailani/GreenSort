@@ -48,7 +48,7 @@ def address(category: str):
 
         # Create a cursor
         cursor = connection.cursor()
-        cursor.execute(f'SELECT * FROM "categories" WHERE category = \'{category}\' OR category_english = \'{category}\';')
+        cursor.execute(f'SELECT * FROM "categories" WHERE category ILIKE \'{category}\' OR category_english ILIKE \'{category}\';')
         result = cursor.fetchone()
         print(result)
         cursor.close()

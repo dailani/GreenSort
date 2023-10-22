@@ -44,8 +44,8 @@ def material() -> Response:
 
 @app.route('/getCategory', methods=['POST'])
 def getCategory() -> Response:
-    material: list[str] = json.loads(request.data)[0]["material"]
-    things: list[str] = json.loads(request.data)[0]["things"]
+    material: list[str] = json.loads(request.data)["material"]
+    things: list[str] = json.loads(request.data)["things"]
     r = getcategory(material,things)
 
     return jsonify(r)

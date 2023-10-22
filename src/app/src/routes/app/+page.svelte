@@ -27,7 +27,6 @@
 		currentState = AppState.ObjectSelection;
 	};
 
-	let globalCategory: any;
 
 	let globalCategory: any;
 
@@ -162,7 +161,7 @@
 
 		try {
 			const materials = await getMaterial({ image: objectImage });
-			globalMaterials = materials  ;
+		
 		} catch (error) {
 			errorMessage = String(error);
 			updateCurrentState(AppState.Error);
@@ -213,7 +212,7 @@
 			src="data:image/png;base64,{currentObjectImage ?? ''}"
 		/>
 	{:else if currentState == AppState.ObjectDetails}
-		<Summary materials={globalMaterials} onBack={handleStateChange} src="data:image/png;base64,{currentObjectImage ?? ''}"/>
+		<Summary materials={currentObjectMaterials} onBack={handleStateChange} src="data:image/png;base64,{currentObjectImage ?? ''}"/>
 	{:else if currentState == AppState.Error}
 		<h2 class="font-bold text-lg text-red-700">An error occured</h2>
 		<p>{errorMessage}</p>

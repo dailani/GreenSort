@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type { ImageMaterials } from "$lib/backend/ai-controller";
+
     	
 	export let src: string;
     export let onBack: () => void;

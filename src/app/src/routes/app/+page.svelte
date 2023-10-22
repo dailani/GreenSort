@@ -27,9 +27,6 @@
 		currentState = AppState.ObjectSelection;
 	};
 
-
-	let globalCategory: any;
-
 	let cameraRunning: boolean = false;
 
 	let userImage: string | null = null;
@@ -37,7 +34,7 @@
 	let objectImages: string[] | null = null;
 	let currentObjectImage: string | null = null;
 	let currentObjectMaterials: ImageMaterials | null = null;
-	let currentObjectDetails: any | null = null;
+	let currentObjectCategory: any | null = null;
 
 	let errorMessage: string | null = null;
 
@@ -161,7 +158,6 @@
 
 		try {
 			const materials = await getMaterial({ image: objectImage });
-		
 		} catch (error) {
 			errorMessage = String(error);
 			updateCurrentState(AppState.Error);
@@ -212,7 +208,12 @@
 			src="data:image/png;base64,{currentObjectImage ?? ''}"
 		/>
 	{:else if currentState == AppState.ObjectDetails}
-		<Summary materials={currentObjectMaterials} onBack={handleStateChange} src="data:image/png;base64,{currentObjectImage ?? ''}"/>
+		<Summary
+			materials={currentObjectMaterials ?? { material: [], things: [] }}
+			category={currentObjectCategory}
+			onBack={handleStateChange}
+			src="data:image/png;base64,{currentObjectImage ?? ''}"
+		/>
 	{:else if currentState == AppState.Error}
 		<h2 class="font-bold text-lg text-red-700">An error occured</h2>
 		<p>{errorMessage}</p>

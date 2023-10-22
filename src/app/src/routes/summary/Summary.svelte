@@ -4,18 +4,17 @@
 	export let src: string;
     export let onBack: () => void;
     export let materials: ImageMaterials;
-    let trashcanImg = '$lib/static/trashcans.jpg'
+    import trashcanImg from '$lib/static/recycle.svg'
 
     
 	interface ImageMaterials {
 	materials: string[];
 	things: string[];
-}
+}   
 </script>
 
-<div class=" flex flex-row bg-[#1c0418] px-4 py-2 rounded-b-[48px] gap-3 items-center justify-center">
-    <button on:click={onBack} class="text-white font-bold border-solid border-2 border-white rounded-2xl w-fit px-2 py-1 " >Back</button>
-    <div class=" text-2xl text-white font-bold flex flex-wrap text-clip">{materials == null ? 'Not Found' : materials.material}</div>
+<div class=" flex flex-col bg-[#1c0418] px-4 py-2 rounded-b-[48px] items-center justify-center gap-[1px]">
+    <button on:click={onBack} class="text-white font-bold border-white rounded-2xl w-fit px-2 py-[1px] " >Back</button>
 </div>
 
 <div class="flex flex-col px-4 gap-y-4  py-5">
@@ -25,13 +24,21 @@
         </div>
           <div class="flex flex-col py-1 px-2  bg-[#16b78d] shadow-sm rounded-b-md">
             <div class="flex flex-col p-2 items-center">
+                <div class="text-md items-center text-white ">This items consists of</div>
+                <div class=" text-2xl text-white font-bold flex flex-wrap text-clip">{materials == null ? 'Not Found' : materials.material}</div>
+
+            </div>
+            <div class="flex flex-col p-2 items-center">
                 <div class="text-md items-center text-white ">Recycle this item and save</div>
-                <div class=" text-2xl text-white font-bold flex flex-wrap text-clip">0.5</div>
+                <div class=" text-2xl text-white font-bold flex flex-wrap text-clip">+12</div>
                 <div class=" text-2xl text-white font-bold flex flex-wrap text-clip">Carbon Credits</div>
             </div>
         </div>
     </div>
-    <div class="bg-[#16b78d] rounded-md shadow-md text-white">
+    <div class="bg-[#16b78d] rounded-md shadow-md text-white py-2">
+        <div class="flex flex-col  items-center bg-inherit">
+            <img src={trashcanImg} alt="Recycling Trash Cans" class="bg-inherit max-h-16 ">
+        </div>
         <div class="text-md items-center text-white text-center text-2xl">Disposal Information</div>
             <div class="flex flex-col gap-y-2 p-2">
             <div class="flex flex-row justify-between">
@@ -46,9 +53,7 @@
                 <div class="text-xl">Location</div>
                 <div class="text-xl">small "redirect" icon</div>
             </div>
-            <div>
-                <img src={trashcanImg} alt="Recycling Trash Cans" class="">
-            </div>
+          
         </div>
     </div>
 </div>

@@ -56,3 +56,23 @@ export async function getCategory(content: ImageMaterials) {
 
 	return data;
 }
+
+export async function getAddress(category: string) {
+	const response = await fetch(
+		`https://greensort-backend-okzie2k6iq-uc.a.run.app/method/${category}`,
+		{
+			method: 'GET',
+			headers: { 'Content-Type': 'application/json; charset=UTF-8' }
+		}
+	);
+	console.log(response);
+
+	if (!response.ok) {
+		throw new Error(response.statusText);
+	}
+
+	const data = await response.json();
+	console.log('Category from backend:' + data);
+
+	return data;
+}

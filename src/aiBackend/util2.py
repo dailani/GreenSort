@@ -4,7 +4,7 @@ db_settings = {
     "user": "kek",
     "password": "12345",
     "host": "35.198.149.112",
-    "database": "postgres"
+    "database": "greensort"
 }
 
 

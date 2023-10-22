@@ -4,7 +4,7 @@
 	import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 	import { onMount } from 'svelte';
 	import ImageBackgroundLoader from './ImageBackgroundLoader.svelte';
-	import { getImages, type ImageMaterials } from '$lib/backend/ai-controller';
+	import { getCategory, getImages, type ImageMaterials } from '$lib/backend/ai-controller';
 	import { getMaterial } from '$lib/backend/ai-controller';
 	import { App } from '@capacitor/app';
 	import Summary from '../summary/Summary.svelte';
@@ -157,10 +157,11 @@
 		updateCurrentState(AppState.ObjectClassification);
 
 		try {
-			const materials = await getMaterial({ image: objectImage });
+			currentObjectCategory = await getCategory(material);
 		} catch (error) {
 			errorMessage = String(error);
 			updateCurrentState(AppState.Error);
+			return;
 		}
 
 		updateCurrentState(AppState.ObjectDetails);

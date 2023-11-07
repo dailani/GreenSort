@@ -19,7 +19,6 @@ GreenSort is a Google Challenge-winning project that aims to promote eco-friendl
 
 ## Usage
 To use GreenSort, simply follow these steps:
-Here's the modified text with the image links embedded in `<img>` tags and arranged in a row with a width of 314 and height of 714:
 
 1. Scan a photo of your objects.
    <img src="https://github.com/dailani/GreenSort/assets/51968936/af50c839-d431-4ee8-a74b-1a8551c54105" alt="Scan a photo of your objects." width="314" height="714">

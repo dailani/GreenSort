@@ -1,5 +1,7 @@
-# GreenSort
-![Google Challenge Winner Project]([https://your-image-link-here.com](https://cdn.discordapp.com/attachments/1101566509177909309/1165590592726765668/image.png?ex=6559dcd4&is=654767d4&hm=a27b1d92e3f8248ad4b518855f08db3a66d38e1b39401cfcd80539277427d79f&))
+# GreenSort / Google Challenge Winner Project
+
+<img width="714" alt="greensort" src="https://github.com/dailani/GreenSort/assets/51968936/dfd36a56-b08e-4220-bb6d-f298af4c3e06">
+
 
 ## Overview
 GreenSort is a Google Challenge-winning project that aims to promote eco-friendliness by simplifying the recycling process. This project utilizes cutting-edge technology to make recycling more accessible and efficient.

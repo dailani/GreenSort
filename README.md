@@ -20,15 +20,16 @@ GreenSort is a Google Challenge-winning project that aims to promote eco-friendl
 ## Usage
 To use GreenSort, simply follow these steps:
 
-1. Scan a photo of your objects , that you want to recycle. It can be anything that you want.
+1. Scan a photo of your objects , that you want to recycle.
+   
    <img src="https://github.com/dailani/GreenSort/assets/51968936/af50c839-d431-4ee8-a74b-1a8551c54105" alt="Scan a photo of your objects." width="214" height="514">
 
-2. GreenSort will immediately crop the image into distinct different objects.  
+3. GreenSort will immediately crop the image into distinct different objects.  
    <img src="https://github.com/dailani/GreenSort/assets/51968936/5adfe5c3-9d3f-4607-a1ec-0114bc5cd4ad" alt="Crop" width="214" height="514">
 
-3. The system will define the material of each object using image classification.
+4. The system will define the material of each object using image classification.
 
-4. Based on local recycle laws (Frankfurt), it will generate a summary of how and where to recycle each object and how many Carbon Credits you saved.  
+5. Based on local recycle laws (Frankfurt), it will generate a summary of how and where to recycle each object and how many Carbon Credits you saved.  
    <img src="https://github.com/dailani/GreenSort/assets/51968936/d6776db9-5cd4-41be-a9a6-864c58730c2d" alt="Summary" width="214" height="514">
 
 
